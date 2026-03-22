@@ -1,0 +1,580 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dashboard Semana 23 - Mecanizacion</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,Helvetica,Arial,sans-serif;background:#F0F4FA;color:#1A1A2E;font-size:14px}
+.topbar{background:#0D2E52;padding:0 16px;display:flex;align-items:center;justify-content:space-between;height:50px;position:sticky;top:0;z-index:100}
+.tl{display:flex;align-items:center;gap:10px}
+.tlogo{font-size:11px;font-weight:700;color:#85B7EB;letter-spacing:.1em}
+.ttitle{font-size:13px;font-weight:600;color:#fff}
+.tbadge{font-size:10px;padding:2px 8px;border-radius:20px;background:rgba(255,255,255,.15);color:#B5D4F4}
+.tmeta{font-size:10px;color:rgba(255,255,255,.4)}
+.shell{padding:16px 14px 60px}
+.fbar{display:flex;flex-direction:column;gap:8px;margin-bottom:14px}
+.fbar select{font-size:13px;padding:10px 14px;border:1px solid rgba(0,0,0,.12);border-radius:10px;background:#fff;color:#1A1A2E;width:100%}
+.tabs{display:flex;gap:0;margin-bottom:18px;border-bottom:1.5px solid rgba(0,0,0,.08);overflow-x:auto;-webkit-overflow-scrolling:touch}
+.tab{font-size:13px;font-weight:500;padding:9px 14px;border:none;background:transparent;color:#6B7280;cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-1.5px;white-space:nowrap}
+.tab.on{color:#1F4E79;border-bottom-color:#1F4E79;font-weight:600}
+.kgrid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px}
+.kcard{background:#fff;border:1px solid rgba(0,0,0,.08);border-radius:12px;padding:14px}
+.knum{font-size:28px;font-weight:700;line-height:1;color:#1A1A2E}
+.knum.bl{color:#1F4E79}.knum.gr{color:#0F6E56}
+.klbl{font-size:12px;color:#6B7280;margin-top:5px}
+.ksub{font-size:10px;color:#9CA3AF;margin-top:2px}
+.ktag{display:inline-block;font-size:9px;padding:2px 7px;border-radius:20px;background:#E1F5EE;color:#0F6E56;font-weight:600;margin-top:4px}
+.card{background:#fff;border:1px solid rgba(0,0,0,.08);border-radius:12px;padding:14px;margin-bottom:12px}
+.ctitle{font-size:10px;font-weight:700;letter-spacing:.08em;color:#6B7280;text-transform:uppercase;margin-bottom:12px}
+.leg{display:flex;gap:14px;margin-bottom:10px}
+.li{display:flex;align-items:center;gap:5px;font-size:12px;color:#6B7280}
+.lsq{width:10px;height:10px;border-radius:3px;flex-shrink:0}
+.barchart{display:flex;align-items:flex-end;gap:3px;height:140px;padding-bottom:20px}
+.bcol{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;height:100%}
+.bval{font-size:9px;font-weight:700;color:#374151;margin-bottom:2px}
+.bm{width:80%;background:#1D9E75}
+.bt{width:80%;background:#B4B2A9;border-radius:2px 2px 0 0}
+.blbl{font-size:9px;color:#9CA3AF;margin-top:4px}
+.atable{width:100%;border-collapse:collapse}
+.atable th{font-size:10px;font-weight:700;letter-spacing:.05em;color:#6B7280;text-transform:uppercase;padding:0 5px 8px;text-align:center;border-bottom:1px solid rgba(0,0,0,.07)}
+.atable th.lft{text-align:left;padding-left:0}
+.atable td{font-size:12px;padding:6px 5px;border-bottom:1px solid #F3F4F6;vertical-align:middle}
+.atable tr:last-child td{border-bottom:none}
+.anc{display:flex;align-items:center;gap:6px}
+.adot{width:7px;height:7px;border-radius:50%;flex-shrink:0}
+.tc{text-align:center;font-weight:600}
+.tcm{color:#0F6E56}.tct{color:#5F5E5A}.tctot{color:#6B7280;font-weight:400}
+.mbar{width:100%;height:3px;background:#F3F4F6;border-radius:2px;overflow:hidden;margin-top:3px}
+.mbf{height:100%;border-radius:2px}
+.hmg{display:grid;gap:3px}
+.hmc{height:24px;border-radius:4px;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:600}
+.hmh{background:transparent;color:#9CA3AF;font-size:10px}
+.hml{background:transparent;color:#9CA3AF;font-size:10px;justify-content:flex-end;padding-right:8px;white-space:nowrap}
+.hmleg{display:flex;align-items:center;gap:5px;margin-top:8px;font-size:11px;color:#9CA3AF}
+.hmsw{width:13px;height:13px;border-radius:3px}
+.irow{display:grid;grid-template-columns:1fr;gap:10px}
+.ins{background:#fff;border:1px solid rgba(0,0,0,.08);border-radius:12px;padding:14px;display:flex;gap:10px}
+.iico{width:32px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.itit{font-size:13px;font-weight:600;line-height:1.4}
+.isub{font-size:11px;color:#6B7280;margin-top:3px;line-height:1.5}
+.mtag{font-size:9px;padding:2px 7px;border-radius:20px;background:#E1F5EE;color:#0F6E56;font-weight:700;display:inline-block;margin-bottom:4px}
+.view{display:none}.view.on{display:block}
+.aday{margin-bottom:14px;border-radius:12px;overflow:hidden;border:1px solid rgba(0,0,0,.08)}
+.adhdr{font-size:12px;font-weight:700;color:#fff;padding:9px 14px}
+.ait{display:flex;gap:10px;padding:10px 14px;background:#fff;border-top:1px solid #F3F4F6;align-items:flex-start}
+.atm{font-size:11px;font-weight:700;color:#9CA3AF;width:36px;flex-shrink:0;padding-top:1px}
+.abar{width:3px;border-radius:2px;min-height:36px;flex-shrink:0}
+.abody{flex:1;min-width:0}
+.aact{font-size:12px;font-weight:500;color:#1A1A2E}
+.amet{font-size:11px;color:#6B7280;margin-top:2px}
+.abdg{display:inline-block;font-size:9px;padding:2px 7px;border-radius:4px;font-weight:700;margin-top:4px}
+.jtog{display:flex;gap:8px;margin-bottom:14px}
+.jbtn{flex:1;padding:10px;font-size:13px;font-weight:600;border:1.5px solid rgba(0,0,0,.12);border-radius:10px;background:#fff;color:#6B7280;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:7px}
+.jbtn.jm{background:#E1F5EE;color:#0F6E56;border-color:#1D9E75}
+.jbtn.jt{background:#F4F6F9;color:#1A1A2E;border-color:#9CA3AF}
+.jdot{width:9px;height:9px;border-radius:50%;flex-shrink:0}
+.jkpis{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:12px}
+.abrow{display:flex;align-items:center;gap:8px;padding:7px 0;border-bottom:1px solid #F3F4F6}
+.abrow:last-child{border-bottom:none}
+.abn{font-size:12px;flex:1}
+.abtr{height:6px;background:#F3F4F6;border-radius:3px;overflow:hidden;width:80px;flex-shrink:0}
+.abfl{height:100%;border-radius:3px}
+.abnum{font-size:12px;font-weight:600;width:22px;text-align:right;flex-shrink:0}
+.abpc{font-size:11px;color:#6B7280;width:30px;text-align:right;flex-shrink:0}
+.rcard{background:#fff;border:1px solid rgba(0,0,0,.08);border-radius:12px;padding:14px;margin-bottom:10px}
+.rhdr{display:flex;align-items:center;gap:10px;margin-bottom:10px}
+.rav{width:34px;height:34px;border-radius:50%;background:#E6F1FB;color:#1F4E79;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0}
+.rname{font-size:13px;font-weight:600}
+.rsub{font-size:11px;color:#6B7280;margin-top:1px}
+.rcnt{margin-left:auto;font-size:22px;font-weight:700;color:#1F4E79}
+.arow{display:flex;align-items:center;gap:8px;padding:6px 0;border-top:1px solid #F3F4F6}
+.art{font-size:11px;font-weight:700;color:#6B7280;width:36px;flex-shrink:0}
+.ardot{width:7px;height:7px;border-radius:50%;flex-shrink:0}
+.arn{font-size:12px;flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.ard{font-size:11px;color:#9CA3AF;flex-shrink:0}
+@media(min-width:560px){.kgrid{grid-template-columns:repeat(4,1fr)}.fbar{flex-direction:row}.irow{grid-template-columns:1fr 1fr}}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="tl">
+    <div class="ttitle">Division Agricola &mdash; Dashboard Semanal de Visitas de Departamentos de Soporte</div>
+    <div class="tbadge">Semana 23</div>
+  </div>
+  <div class="tmeta">16-22 Mar 2026</div>
+</div>
+
+<div class="shell">
+  <div class="fbar">
+    <select id="fDep" onchange="render()"><option value="">Todos los dptos.</option></select>
+    <select id="fResp" onchange="render()"><option value="">Todos los responsables</option></select>
+    <select id="fArea" onchange="render()"><option value="">Todas las areas</option></select>
+  </div>
+
+  <div class="tabs">
+    <button class="tab on" onclick="switchTab('resumen',this)">Resumen</button>
+    <button class="tab" onclick="switchTab('agenda',this)">Agenda por dia</button>
+    <button class="tab" onclick="switchTab('personas',this)">Por persona</button>
+  </div>
+
+  <div id="view-resumen" class="view on">
+    <div class="kgrid" id="kpis"></div>
+    <div class="card">
+      <div class="ctitle">Actividades por dia</div>
+      <div class="leg">
+        <div class="li"><div class="lsq" style="background:#1D9E75"></div>Manana</div>
+        <div class="li"><div class="lsq" style="background:#B4B2A9"></div>Tarde</div>
+      </div>
+      <div id="barchart" class="barchart"></div>
+    </div>
+    <div class="card">
+      <div class="ctitle">Areas mas visitadas</div>
+      <div style="display:grid;grid-template-columns:1.3fr 1fr;gap:14px;align-items:start">
+        <table class="atable">
+          <thead>
+            <tr>
+              <th class="lft">Area</th>
+              <th style="color:#0F6E56">Man.</th>
+              <th style="color:#5F5E5A">Tarde</th>
+              <th>Total</th>
+            </tr>
+          </thead>
+          <tbody id="atb"></tbody>
+        </table>
+        <div class="irow" id="ins" style="display:flex;flex-direction:column;gap:10px"></div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="ctitle">Mapa hora x dia</div>
+      <div class="hmg" id="hm"></div>
+      <div class="hmleg">
+        <span>Menos</span>
+        <div style="display:flex;gap:2px">
+          <div class="hmsw" style="background:#EAF3DE"></div><div class="hmsw" style="background:#97C459"></div><div class="hmsw" style="background:#BA7517"></div><div class="hmsw" style="background:#E24B4A"></div><div class="hmsw" style="background:#A32D2D"></div>
+        </div>
+        <span>Mas actividad</span>
+      </div>
+    </div>
+  </div>
+
+  <div id="view-agenda" class="view">
+    <div class="jtog">
+      <button class="jbtn jm" id="btnM" onclick="setJ('m')">
+        <div class="jdot" style="background:#1D9E75"></div>Manana 00:00-12:59
+      </button>
+      <button class="jbtn" id="btnT" onclick="setJ('t')">
+        <div class="jdot" style="background:#B4B2A9"></div>Tarde 13:00-23:59
+      </button>
+      <button class="jbtn" id="btnA" onclick="setJ('a')">
+        <div class="jdot" style="background:#1F4E79"></div>Todos
+      </button>
+    </div>
+    <div class="jkpis" id="jkpis"></div>
+    <div id="jag"></div>
+  </div>
+
+
+
+  <div id="view-personas" class="view"><div id="pc"></div></div>
+</div>
+
+<script>
+var D = [{dep:"Mecanizacion",dia:"Lunes",h:6,hora:"06:00",area:"Zona 4",act:"Evaluación de tractoristas, Zona 4",resp:"Armando Reyes",tema:"Capacitación"},{dep:"Mecanizacion",dia:"Lunes",h:14,hora:"14:00",area:"Oficinas Ingenio",act:"Capacitacion archivo de planificación, Investigacion",resp:"Armando Reyes",tema:"Capacitación"},{dep:"Mecanizacion",dia:"Lunes",h:16,hora:"16:00",area:"Oficinas Ingenio",act:"Capacitacion archivo de planificación, Malezas",resp:"Armando Reyes",tema:"Capacitación"},{dep:"Mecanizacion",dia:"Lunes",h:11,hora:"11:00",area:"Oficinas Ingenio",act:"Revisión fechas de corte ensayos",resp:"Armando Reyes",tema:"Logística"},{dep:"Mecanizacion",dia:"Lunes",h:16,hora:"16:00",area:"Oficinas Ingenio",act:"Cuadre de disponibilidad de maquinaria diaria, Campo-Taller",resp:"Armando Reyes",tema:"Logística"},{dep:"Mecanizacion",dia:"Lunes",h:18,hora:"18:00",area:"Oficinas Ingenio",act:"Dashboar de Piedra Manual y Mecanico",resp:"Armando Reyes",tema:"Reporte / Informe"},{dep:"Mecanizacion",dia:"Martes",h:6,hora:"06:00",area:"Hule Sur",act:"Evaluación de tractoristas, Hule Sur",resp:"Armando Reyes",tema:"Capacitación"},{dep:"Mecanizacion",dia:"Martes",h:10,hora:"10:00",area:"Taller Central",act:"Evaluación de tractoristas, mantenimiento",resp:"Armando Reyes",tema:"Capacitación"},{dep:"Mecanizacion",dia:"Martes",h:14,hora:"14:00",area:"CENGICANA",act:"Entrega de muestras",resp:"Armando Reyes",tema:"Muestreo de suelos"},{dep:"Mecanizacion",dia:"Martes",h:16,hora:"16:00",area:"Oficinas Ingenio",act:"Cuadre de disponibilidad de maquinaria diaria, Campo-Taller",resp:"Armando Reyes",tema:"Logística"},{dep:"Mecanizacion",dia:"Martes",h:17,hora:"17:00",area:"Oficinas Ingenio",act:"Elaboracion de Dashboar de Sacado de Piedra y servicios preventivos",resp:"Armando Reyes",tema:"Reporte / Informe"},{dep:"Mecanizacion",dia:"Miercoles",h:6,hora:"06:00",area:"Zona 5",act:"Evaluación de tractoristas, Zona 5",resp:"Armando Reyes",tema:"Capacitación"},{dep:"Mecanizacion",dia:"Miercoles",h:14,hora:"14:00",area:"Zona 1",act:"Verificacion de traslapes en surcado",resp:"Armando Reyes",tema:"Preparación de Tierras"},{dep:"Mecanizacion",dia:"Miercoles",h:16,hora:"16:00",area:"Oficinas Ingenio",act:"Cuadre de disponibilidad de maquinaria diaria, Campo-Taller",resp:"Armando Reyes",tema:"Logística"},{dep:"Mecanizacion",dia:"Miercoles",h:17,hora:"17:00",area:"Oficinas Ingenio",act:"Elaboracion de Dashboar de Sacado de Piedra y servicios preventivos",resp:"Armando Reyes",tema:"Reporte / Informe"},{dep:"Mecanizacion",dia:"Jueves",h:7,hora:"07:00",area:"Zona 8",act:"Verificacion de traslapes en surcado",resp:"Armando Reyes",tema:"Preparación de Tierras"},{dep:"Mecanizacion",dia:"Jueves",h:14,hora:"14:00",area:"Oficinas Ingenio",act:"Dashboar de Piedra Manual y Mecanico",resp:"Armando Reyes",tema:"Reporte / Informe"},{dep:"Mecanizacion",dia:"Jueves",h:16,hora:"16:00",area:"Oficinas Ingenio",act:"Cuadre de disponibilidad de maquinaria diaria, Campo-Taller",resp:"Armando Reyes",tema:"Logística"},{dep:"Mecanizacion",dia:"Jueves",h:18,hora:"18:00",area:"Oficinas Ingenio",act:"Soporte archivo de planificacion a de actividades",resp:"Armando Reyes",tema:"Administrativo"},{dep:"Mecanizacion",dia:"Viernes",h:6,hora:"06:00",area:"Zona 1",act:"Seguimiento respuesta de fertilizacion varios ensayos Los Amigos",resp:"Armando Reyes",tema:"Fertilización"},{dep:"Mecanizacion",dia:"Viernes",h:10,hora:"10:00",area:"Zona 1",act:"Seguimiento lotes aplicados con Urea y Biosmart Terratop",resp:"Armando Reyes",tema:"Fertilización"},{dep:"Mecanizacion",dia:"Viernes",h:14,hora:"14:00",area:"CENGICANA",act:"Entrega de muestras",resp:"Armando Reyes",tema:"Muestreo de suelos"},{dep:"Mecanizacion",dia:"Viernes",h:16,hora:"16:00",area:"Oficinas Ingenio",act:"Cuadre de disponibilidad de maquinaria diaria, Campo-Taller",resp:"Armando Reyes",tema:"Logística"},{dep:"Mecanizacion",dia:"Viernes",h:17,hora:"17:00",area:"Oficinas Ingenio",act:"Soporte archivo de planificacion de actividades a departamentos",resp:"Armando Reyes",tema:"Administrativo"},{dep:"Mecanizacion",dia:"Sabado",h:7,hora:"07:00",area:"Oficinas Ingenio",act:"Elaboracion de planificacion semanal de actividades",resp:"Armando Reyes",tema:"Administrativo"},{dep:"Mecanizacion",dia:"Sabado",h:8,hora:"08:00",area:"Oficinas Ingenio",act:"Soporte archivo de planificacion de actividades a departamentos",resp:"Armando Reyes",tema:"Administrativo"},{dep:"Mecanizacion",dia:"Sabado",h:16,hora:"16:00",area:"Oficinas Ingenio",act:"Cuadre de disponibilidad de maquinaria diaria, Campo-Taller",resp:"Armando Reyes",tema:"Logística"},{dep:"Mecanizacion",dia:"Lunes",h:6,hora:"06:00",area:"Oficinas Ingenio",act:"Reunión de Cosecha",resp:"Hugo Castellanos",tema:"Logística"},{dep:"Mecanizacion",dia:"Lunes",h:8,hora:"08:00",area:"Zona 4",act:"Evaluación de tractoristas, Zona 4",resp:"Hugo Castellanos",tema:"Capacitación"},{dep:"Mecanizacion",dia:"Lunes",h:15,hora:"15:00",area:"Oficinas Ingenio",act:"Elaboración informacion ISO",resp:"Hugo Castellanos",tema:"Administrativo"},{dep:"Mecanizacion",dia:"Lunes",h:17,hora:"17:00",area:"Oficinas Ingenio",act:"Capacitacion archivo de planificación",resp:"Hugo Castellanos",tema:"Capacitación"},{dep:"Mecanizacion",dia:"Lunes",h:18,hora:"18:00",area:"Oficinas Ingenio",act:"Programación de distribución de maquinaria y avance de labores",resp:"Hugo Castellanos",tema:"Logística"},{dep:"Mecanizacion",dia:"Lunes",h:19,hora:"19:00",area:"Oficinas Ingenio",act:"Análisis de costos Cat. 11",resp:"Hugo Castellanos",tema:"Reporte / Informe"},{dep:"Mecanizacion",dia:"Martes",h:6,hora:"06:00",area:"Hule Sur",act:"Evaluación de tractoristas, Hule Sur",resp:"Hugo Castellanos",tema:"Capacitación"},{dep:"Mecanizacion",dia:"Martes",h:10,hora:"10:00",area:"Taller Central",act:"Evaluación de tractoristas, Mantenimiento",resp:"Hugo Castellanos",tema:"Capacitación"},{dep:"Mecanizacion",dia:"Martes",h:11,hora:"11:00",area:"Taller Central",act:"Planificación de repuestos estratégicos (Estabilizadores y cadenas ATU)",resp:"Hugo Castellanos",tema:"Reunión presencial"},{dep:"Mecanizacion",dia:"Martes",h:14,hora:"14:00",area:"Oficinas Ingenio",act:"Análisis de costos Cat. 11",resp:"Hugo Castellanos",tema:"Reporte / Informe"},{dep:"Mecanizacion",dia:"Martes",h:17,hora:"17:00",area:"Oficinas Ingenio",act:"Capacitacion archivo de planificación",resp:"Hugo Castellanos",tema:"Capacitación"},{dep:"Mecanizacion",dia:"Martes",h:18,hora:"18:00",area:"Oficinas Ingenio",act:"Tareas administrativas: Consolidación y envio de Programa de solicitud de Fertilizante, Digitación de ingreso de boletas de fertilizante",resp:"Hugo Castellanos",tema:"Logística"},{dep:"Mecanizacion",dia:"Martes",h:19,hora:"19:00",area:"Oficinas Ingenio",act:"Programación de distribución de maquinaria y avance de labores",resp:"Hugo Castellanos",tema:"Logística"},{dep:"Mecanizacion",dia:"Miercoles",h:6,hora:"06:00",area:"Zona 5",act:"Evaluación de tractoristas, Zona 5",resp:"Hugo Castellanos",tema:"Capacitación"},{dep:"Mecanizacion",dia:"Miercoles",h:11,hora:"11:00",area:"Oficinas Ingenio",act:"Informe Final / Renovación Licencia Ambiental Casco MT",resp:"Hugo Castellanos",tema:"Reporte / Informe"},{dep:"Mecanizacion",dia:"Miercoles",h:14,hora:"14:00",area:"Oficinas Ingenio",act:"Elaboración de dashboard de disponibilidad de maquinaria",resp:"Hugo Castellanos",tema:"Reporte / Informe"},{dep:"Mecanizacion",dia:"Miercoles",h:16,hora:"16:00",area:"Oficinas Ingenio",act:"Normativo uso de labor Operador en espera por reparación",resp:"Hugo Castellanos",tema:"Reunión presencial"},{dep:"Mecanizacion",dia:"Jueves",h:7,hora:"07:00",area:"Zona 4",act:"Mantenimiento equipo FIQ",resp:"Hugo Castellanos",tema:"Fertilización"},{dep:"Mecanizacion",dia:"Jueves",h:14,hora:"14:00",area:"Oficinas Ingenio",act:"Reunión EPA",resp:"Hugo Castellanos",tema:"Reunión presencial"},{dep:"Mecanizacion",dia:"Jueves",h:18,hora:"18:00",area:"Oficinas Ingenio",act:"Programación de distribución de maquinaria y avance de labores",resp:"Hugo Castellanos",tema:"Logística"},{dep:"Mecanizacion",dia:"Viernes",h:6,hora:"06:00",area:"Zona 5",act:"Visita area de preparacion",resp:"Hugo Castellanos",tema:"Preparación de Tierras"},{dep:"Mecanizacion",dia:"Viernes",h:10,hora:"10:00",area:"INAFEB",act:"Instalacion de sensores de caída",resp:"Hugo Castellanos",tema:"Fertilización"},{dep:"Mecanizacion",dia:"Viernes",h:15,hora:"15:00",area:"Oficinas Ingenio",act:"Planificación de labores Pull de siembras",resp:"Hugo Castellanos",tema:"Logística"},{dep:"Mecanizacion",dia:"Viernes",h:18,hora:"18:00",area:"Oficinas Ingenio",act:"Programación de distribución de maquinaria y avance de labores",resp:"Hugo Castellanos",tema:"Logística"}];
+
+var DAYS  = ["Lunes","Martes","Miercoles","Jueves","Viernes","Sabado","Domingo"];
+var DLBL  = ["Lunes","Martes","Miercoles","Jueves","Viernes","Sabado","Domingo"];
+var DCOL  = ["#0D2E52","#1F4E79","#1565C0","#0D2E52","#1F4E79","#1565C0","#0D2E52"];
+var HOUR_BLOCKS = [
+  {label:"Madrugada 00-05", min:0,  max:5},
+  {label:"Manana 06-11",    min:6,  max:11},
+  {label:"Tarde 12-17",     min:12, max:17},
+  {label:"Noche 18-23",     min:18, max:23}
+];
+var AC={"Ingenio MT":"#2E7D32","Empresa":"#F9A825","CENGICANA":"#BF360C","Virtual":"#558B2F","Zona 1":"#1565C0","Zona 2":"#1976D2","Zona 3":"#00838F","Zona 4":"#AD1457","Zona 5":"#4527A0","Zona 6":"#5D4037","Zona 7":"#37474F","Zona 8":"#558B2F","Particulares":"#6A1B9A","Agroindustria":"#E65100","INAFEB":"#E64A19","Oficinas Ingenio":"#185FA5","Hule Sur":"#33691E","Taller Central":"#880E4F"};
+var jornada = "a";
+
+function normArea(a) {
+  if (!a) return a;
+  var i = a.indexOf(":");
+  return i > 0 ? a.substring(0, i).trim() : a;
+}
+
+for (var _i = 0; _i < D.length; _i++) {
+  D[_i].area = normArea(D[_i].area);
+}
+
+function flt() {
+  var dep  = document.getElementById("fDep").value;
+  var resp = document.getElementById("fResp").value;
+  var area = document.getElementById("fArea").value;
+  var out  = [];
+  for (var i = 0; i < D.length; i++) {
+    var r = D[i];
+    if (dep  && r.dep  !== dep)  continue;
+    if (resp && r.resp !== resp) continue;
+    if (area && r.area !== area) continue;
+    out.push(r);
+  }
+  return out;
+}
+
+function uniqVals(arr, key) {
+  var seen = {}, out = [];
+  for (var i = 0; i < arr.length; i++) {
+    var v = arr[i][key];
+    if (!seen[v]) { seen[v] = 1; out.push(v); }
+  }
+  return out;
+}
+
+function countVal(arr, key, val) {
+  var n = 0;
+  for (var i = 0; i < arr.length; i++) { if (arr[i][key] === val) n++; }
+  return n;
+}
+
+function pad(n) { return n < 10 ? "0" + n : "" + n; }
+
+function agHtml(data, colorFn) {
+  var html = "";
+  for (var di = 0; di < DAYS.length; di++) {
+    var day  = DAYS[di];
+    var acts = [];
+    for (var i = 0; i < data.length; i++) {
+      if (data[i].dia === day) acts.push(data[i]);
+    }
+    acts.sort(function(a,b){return a.h - b.h;});
+    if (!acts.length) continue;
+    html += '<div class="aday">';
+    html += '<div class="adhdr" style="background:' + colorFn(di) + '">' + DLBL[di] + ' &nbsp;&#183;&nbsp; ' + acts.length + ' actividad' + (acts.length !== 1 ? "es" : "") + '</div>';
+
+    // Agrupar por hora
+    var grupos = {};
+    for (var ai = 0; ai < acts.length; ai++) {
+      var h = acts[ai].h;
+      if (!grupos[h]) grupos[h] = [];
+      grupos[h].push(acts[ai]);
+    }
+    var horas = [];
+    for (var k in grupos) horas.push(parseInt(k, 10));
+    horas.sort(function(a,b){return a - b;});
+
+    for (var hi = 0; hi < horas.length; hi++) {
+      var h   = horas[hi];
+      var grp = grupos[h];
+      var isM = h < 13;
+
+      if (grp.length === 1) {
+        // Una actividad — layout normal
+        var a = grp[0];
+        html += '<div class="ait">';
+        html += '<div class="atm">' + pad(h) + ':00</div>';
+        html += '<div class="abar" style="background:' + (AC[a.area] || "#ccc") + '"></div>';
+        html += '<div class="abody">';
+        html += '<div class="aact">' + a.act + '</div>';
+        html += '<div class="amet">' + a.resp.split(" ")[0] + " &middot; " + a.area + '</div>';
+        html += '<span class="abdg" style="background:' + (isM ? "#E1F5EE" : "#F4F6F9") + ';color:' + (isM ? "#0F6E56" : "#5F5E5A") + '">' + (isM ? "Manana" : "Tarde") + '</span>';
+        html += '</div></div>';
+      } else {
+        // Varias actividades a la misma hora — layout horizontal
+        html += '<div class="ait">';
+        html += '<div class="atm">' + pad(h) + ':00</div>';
+        html += '<div style="flex:1;display:grid;grid-template-columns:repeat(' + grp.length + ',1fr);gap:8px">';
+        for (var gi = 0; gi < grp.length; gi++) {
+          var a = grp[gi];
+          html += '<div style="border-left:3px solid ' + (AC[a.area] || "#ccc") + ';padding-left:8px;min-width:0">';
+          html += '<div class="aact" style="font-size:11px">' + a.act + '</div>';
+          html += '<div class="amet">' + a.resp.split(" ")[0] + " &middot; " + a.area + '</div>';
+          html += '<span class="abdg" style="background:' + (isM ? "#E1F5EE" : "#F4F6F9") + ';color:' + (isM ? "#0F6E56" : "#5F5E5A") + '">' + (isM ? "Manana" : "Tarde") + '</span>';
+          html += '</div>';
+        }
+        html += '</div></div>';
+      }
+    }
+    html += '</div>';
+  }
+  return html;
+}
+
+function renderJ() {
+  var data = flt();
+  var isAll = jornada === "a";
+  var isM   = jornada === "m";
+  var sub   = [];
+  if (isAll) {
+    sub = data;
+  } else {
+    for (var i = 0; i < data.length; i++) {
+      if (isM ? data[i].h < 13 : data[i].h >= 13) sub.push(data[i]);
+    }
+  }
+  var color = isM ? "#1D9E75" : (isAll ? "#1F4E79" : "#888780");
+  var tecs  = uniqVals(sub, "resp").length;
+  var ars   = uniqVals(sub, "area").length;
+  var khtml = "";
+  var ksub  = isAll ? "todas las jornadas" : (isM ? "00:00-12:59" : "13:00-23:59");
+  var kdata = [[sub.length,"Actividades"],[tecs,"Responsables"],[ars,"Areas"]];
+  for (var i = 0; i < kdata.length; i++) {
+    khtml += '<div class="kcard"><div class="knum" style="color:' + color + '">' + kdata[i][0] + '</div>';
+    khtml += '<div class="klbl">' + kdata[i][1] + '</div>';
+    khtml += '<div class="ksub">' + ksub + '</div></div>';
+  }
+  document.getElementById("jkpis").innerHTML = khtml;
+  document.getElementById("jag").innerHTML   = agHtml(sub, function(di) {
+    return isAll ? DCOL[di] : color;
+  });
+}
+
+function setJ(j) {
+  jornada = j;
+  document.getElementById("btnM").className = "jbtn" + (j === "m" ? " jm" : "");
+  document.getElementById("btnT").className = "jbtn" + (j === "t" ? " jt" : "");
+  document.getElementById("btnA").className = "jbtn" + (j === "a" ? " jm" : "");
+  renderJ();
+}
+
+function render() {
+  var data = flt();
+  var M = [], T = [];
+  for (var i = 0; i < data.length; i++) {
+    if (data[i].h < 13) M.push(data[i]); else T.push(data[i]);
+  }
+
+  // KPIs
+  var tecs  = uniqVals(M, "resp");
+  var tname = [];
+  for (var i = 0; i < tecs.length; i++) tname.push(tecs[i].split(" ")[0]);
+  // Calcular dia mas activo y promedio real
+  var diasConAct = {};
+  for (var i = 0; i < data.length; i++) { diasConAct[data[i].dia] = (diasConAct[data[i].dia]||0)+1; }
+  var topDia = ""; var topDiaN = 0;
+  for (var dk in diasConAct) { if (diasConAct[dk] > topDiaN) { topDiaN = diasConAct[dk]; topDia = dk; } }
+  var diasCount = Object.keys(diasConAct).length || 1;
+  var promedio = Math.round(data.length / diasCount);
+
+  var kdata = [
+    ["bl", data.length, "Actividades totales", "en la semana", null],
+    ["gr", tecs.length, "Tecnicos en campo",   tname.join(" · "), "Manana 00:00-12:59"],
+    ["",   uniqVals(data,"area").length, "Areas visitadas", "", null],
+    ["",   promedio, "Act. promedio/dia", topDia + " mas activo (" + topDiaN + ")", null]
+  ];
+  var khtml = "";
+  for (var i = 0; i < kdata.length; i++) {
+    var p = kdata[i];
+    khtml += '<div class="kcard"><div class="knum' + (p[0] ? " " + p[0] : "") + '">' + p[1] + '</div>';
+    khtml += '<div class="klbl">' + p[2] + '</div>';
+    khtml += '<div class="ksub">' + p[3] + '</div>';
+    if (p[4]) khtml += '<div class="ktag">' + p[4] + '</div>';
+    khtml += '</div>';
+  }
+  document.getElementById("kpis").innerHTML = khtml;
+
+  // Bar chart — pure HTML
+  var mV = [], tV = [], maxV = 0;
+  for (var i = 0; i < DAYS.length; i++) {
+    var mv = countVal(M, "dia", DAYS[i]);
+    var tv = countVal(T, "dia", DAYS[i]);
+    mV.push(mv); tV.push(tv);
+    if (mv + tv > maxV) maxV = mv + tv;
+  }
+  if (maxV === 0) maxV = 1;
+  var bhtml = "";
+  for (var i = 0; i < DAYS.length; i++) {
+    var tot = mV[i] + tV[i];
+    var mh  = Math.round(mV[i] / maxV * 110);
+    var th  = Math.round(tV[i] / maxV * 110);
+    bhtml += '<div class="bcol">';
+    // Manana arriba, Tarde abajo
+    if (mV[i] > 0) {
+      bhtml += '<div style="width:80%;background:#1D9E75;height:' + mh + 'px;border-radius:2px 2px 0 0;display:flex;align-items:center;justify-content:center">';
+      bhtml += '<span style="font-size:9px;font-weight:700;color:#fff">' + mV[i] + '</span></div>';
+    }
+    if (tV[i] > 0) {
+      bhtml += '<div style="width:80%;background:#B4B2A9;height:' + th + 'px;display:flex;align-items:center;justify-content:center">';
+      bhtml += '<span style="font-size:9px;font-weight:700;color:#fff">' + tV[i] + '</span></div>';
+    }
+    bhtml += '<div class="blbl">' + DLBL[i].substring(0, 3) + '</div>';
+    bhtml += '</div>';
+  }
+  document.getElementById("barchart").innerHTML = bhtml;
+
+  // Area table
+  var areas    = uniqVals(data, "area");
+  var areaData = [];
+  for (var i = 0; i < areas.length; i++) {
+    areaData.push({
+      area: areas[i],
+      tot:  countVal(data, "area", areas[i]),
+      m:    countVal(M,    "area", areas[i]),
+      t:    countVal(T,    "area", areas[i])
+    });
+  }
+  areaData.sort(function(a,b){return b.tot - a.tot;});
+  var gmax  = areaData.length ? areaData[0].tot : 1;
+  var ahtml = "";
+  for (var i = 0; i < areaData.length; i++) {
+    var ad = areaData[i];
+    ahtml += '<tr><td>';
+    ahtml += '<div class="anc"><div class="adot" style="background:' + (AC[ad.area] || "#888") + '"></div><span>' + ad.area + '</span></div>';
+    ahtml += '<div class="mbar"><div class="mbf" style="width:' + Math.round(ad.tot / gmax * 100) + '%;background:' + (AC[ad.area] || "#888") + '"></div></div>';
+    ahtml += '</td>';
+    ahtml += '<td class="tc tcm">' + (ad.m || "&#8212;") + '</td>';
+    ahtml += '<td class="tc tct">' + (ad.t || "&#8212;") + '</td>';
+    ahtml += '<td class="tc tctot">' + ad.tot + '</td></tr>';
+  }
+  document.getElementById("atb").innerHTML = ahtml;
+
+  // Heatmap
+  var hmEl = document.getElementById("hm");
+  hmEl.style.gridTemplateColumns = "115px repeat(" + DAYS.length + ",1fr)";
+  var hmC = ["transparent","#EAF3DE","#97C459","#BA7517","#E24B4A","#A32D2D"];
+  var hmD = {};
+  for (var bi = 0; bi < HOUR_BLOCKS.length; bi++) {
+    var blk = HOUR_BLOCKS[bi];
+    for (var di = 0; di < DAYS.length; di++) {
+      var n = 0;
+      for (var i = 0; i < data.length; i++) {
+        if (data[i].dia === DAYS[di] && data[i].h >= blk.min && data[i].h <= blk.max) n++;
+      }
+      hmD[blk.label + "-" + DAYS[di]] = n;
+    }
+  }
+  var hmMax = 0;
+  for (var k in hmD) { if (hmD[k] > hmMax) hmMax = hmD[k]; }
+  if (hmMax === 0) hmMax = 1;
+  var hm = '<div class="hmc hmh"></div>';
+  for (var di = 0; di < DAYS.length; di++) {
+    hm += '<div class="hmc hmh">' + DLBL[di].substring(0,3) + '</div>';
+  }
+  for (var bi = 0; bi < HOUR_BLOCKS.length; bi++) {
+    var blk = HOUR_BLOCKS[bi];
+    hm += '<div class="hmc hml">' + blk.label + '</div>';
+    for (var di = 0; di < DAYS.length; di++) {
+      var v  = hmD[blk.label + "-" + DAYS[di]] || 0;
+      var ci = v ? Math.max(1, Math.ceil(v / hmMax * 5)) : 0;
+      var tc = ci >= 3 ? "#fff" : "#27500A";
+      hm += '<div class="hmc" style="background:' + hmC[ci] + ';color:' + (v ? tc : "transparent") + '">' + (v || "") + '</div>';
+    }
+  }
+  hmEl.innerHTML = hm;
+
+  // Insights
+  var topA = null;
+  for (var i = 0; i < areaData.length; i++) {
+    if (areaData[i].m > 0) { topA = areaData[i]; break; }
+  }
+  var topDM = {dia:"", n:0};
+  for (var di = 0; di < DAYS.length; di++) {
+    var n = countVal(M, "dia", DAYS[di]);
+    if (n > topDM.n) topDM = {dia: DLBL[di], n: n};
+  }
+  // Top 2 temas
+  var temaCount = {};
+  for (var i = 0; i < data.length; i++) {
+    var t = data[i].tema;
+    if (t && t !== "") temaCount[t] = (temaCount[t] || 0) + 1;
+  }
+  var temaArr = [];
+  for (var k in temaCount) temaArr.push({t:k, n:temaCount[k]});
+  temaArr.sort(function(a,b){return b.n - a.n;});
+  var top2 = temaArr.slice(0, 2);
+
+  var ihtml = "";
+  if (topA && M.length > 0) {
+    var pct = Math.round(topA.m / M.length * 100);
+    ihtml += '<div class="ins"><div class="iico" style="background:#E1F5EE"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><rect x="2" y="8" width="3" height="6" rx="1" fill="#1D9E75"/><rect x="6.5" y="5" width="3" height="9" rx="1" fill="#1D9E75"/><rect x="11" y="2" width="3" height="12" rx="1" fill="#1D9E75"/></svg></div>';
+    ihtml += '<div><div class="mtag">Solo manana 00:00-12:59</div>';
+    ihtml += '<div class="itit">' + topA.area + ' concentra el ' + pct + '% de visitas de campo</div>';
+    ihtml += '<div class="isub">' + topA.m + ' de ' + M.length + ' salidas matutinas en esta area</div></div></div>';
+    ihtml += '<div class="ins"><div class="iico" style="background:#E1F5EE"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 12L7 7l3 3 4-5" stroke="#1D9E75" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>';
+    ihtml += '<div><div class="mtag">Solo manana 00:00-12:59</div>';
+    ihtml += '<div class="itit">' + topDM.dia + ' es el dia mas activo en campo</div>';
+    ihtml += '<div class="isub">' + topDM.n + ' salidas matutinas — mayor presencia de tecnicos</div></div></div>';
+  }
+  if (top2.length > 0) {
+    var temaSubtitle = top2.map(function(x){ return x.t + " (" + x.n + ")"; }).join(" &nbsp;&middot;&nbsp; ");
+    ihtml += '<div class="ins"><div class="iico" style="background:#E6F1FB"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><rect x="2" y="3" width="12" height="2" rx="1" fill="#1565C0"/><rect x="2" y="7" width="8" height="2" rx="1" fill="#1565C0"/><rect x="2" y="11" width="10" height="2" rx="1" fill="#1565C0"/></svg></div>';
+    ihtml += '<div><div class="mtag" style="background:#E6F1FB;color:#0C447C">Temas mas frecuentes</div>';
+    ihtml += '<div class="itit">' + (top2[0] ? top2[0].t : "") + ' lidera las actividades</div>';
+    ihtml += '<div class="isub">' + temaSubtitle + '</div></div></div>';
+  }
+  document.getElementById("ins").innerHTML = ihtml;
+
+
+
+
+  // Por persona
+  var rg = {};
+  for (var i = 0; i < data.length; i++) {
+    var r = data[i];
+    if (!rg[r.resp]) rg[r.resp] = [];
+    rg[r.resp].push(r);
+  }
+  var respKeys = Object.keys(rg).sort(function(a,b){ return rg[b].length - rg[a].length; });
+  var phtml = "";
+  for (var ri = 0; ri < respKeys.length; ri++) {
+    var resp = respKeys[ri];
+    var acts = rg[resp];
+    var ini  = resp.split(" ").slice(0,2).map(function(w){return w[0];}).join("");
+    var cm   = 0;
+    for (var i = 0; i < acts.length; i++) { if (acts[i].h < 13) cm++; }
+    acts.sort(function(a,b){
+      return DAYS.indexOf(a.dia) - DAYS.indexOf(b.dia) || a.h - b.h;
+    });
+    phtml += '<div class="rcard">';
+    phtml += '<div class="rhdr">';
+    phtml += '<div class="rav">' + ini + '</div>';
+    phtml += '<div><div class="rname">' + resp + '</div>';
+    phtml += '<div class="rsub">' + cm + ' en campo &middot; ' + (acts.length - cm) + ' en gabinete</div></div>';
+    phtml += '<div class="rcnt">' + acts.length + '</div>';
+    phtml += '</div>';
+    var prevDia = "";
+    for (var i = 0; i < acts.length; i++) {
+      var a = acts[i];
+      // Separador entre dias (incluyendo el primero)
+      if (a.dia !== prevDia) {
+        phtml += '<div style="display:flex;align-items:center;gap:8px;padding:6px 0">';
+        phtml += '<div style="height:1px;flex:1;background:linear-gradient(to right,#1F4E79,transparent)"></div>';
+        phtml += '<div style="font-size:9px;font-weight:700;color:#1F4E79;letter-spacing:.08em;white-space:nowrap">' + DLBL[DAYS.indexOf(a.dia)].toUpperCase() + '</div>';
+        phtml += '<div style="height:1px;flex:1;background:linear-gradient(to left,#1F4E79,transparent)"></div>';
+        phtml += '</div>';
+      }
+      prevDia = a.dia;
+      phtml += '<div class="arow">';
+      phtml += '<div class="art" style="width:80px;flex-shrink:0">' + DLBL[DAYS.indexOf(a.dia)].substring(0,3) + ' ' + pad(a.h) + ':00</div>';
+      phtml += '<div class="ardot" style="background:' + (AC[a.area]||"#ccc") + '"></div>';
+      phtml += '<div class="arn">' + a.act + '</div>';
+      phtml += '</div>';
+    }
+    phtml += '</div>';
+  }
+  document.getElementById("pc").innerHTML = phtml;
+
+  renderJ();
+}
+
+function switchTab(tab, btn) {
+  var tabs  = document.querySelectorAll(".tab");
+  var views = document.querySelectorAll(".view");
+  for (var i = 0; i < tabs.length;  i++) tabs[i].classList.remove("on");
+  for (var i = 0; i < views.length; i++) views[i].classList.remove("on");
+  btn.classList.add("on");
+  document.getElementById("view-" + tab).classList.add("on");
+  if (tab === "agenda") renderJ();
+}
+
+// Populate filter dropdowns
+var deps  = uniqVals(D, "dep");
+var resps = uniqVals(D, "resp");
+var areas = uniqVals(D, "area");
+for (var i = 0; i < deps.length;  i++) { var o=document.createElement("option"); o.value=o.textContent=deps[i];  document.getElementById("fDep").appendChild(o);  }
+for (var i = 0; i < resps.length; i++) { var o=document.createElement("option"); o.value=o.textContent=resps[i]; document.getElementById("fResp").appendChild(o); }
+for (var i = 0; i < areas.length; i++) { var o=document.createElement("option"); o.value=o.textContent=areas[i]; document.getElementById("fArea").appendChild(o); }
+
+render();
+</script>
+</body>
+</html>
